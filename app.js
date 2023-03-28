@@ -5,6 +5,10 @@ const app = express()
 const mongoose = require('mongoose')
 //載入handlebars
 const exphbs = require('express-handlebars')
+//載入Todo model
+const Todo = require('./models/todo')
+
+
 
 
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
@@ -30,7 +34,10 @@ db.once('open', () => {
 
 //設定首頁路由
 app.get('/', (req, res) => {
-  res.render('index')
+  Todo.find()//取出Todo model裡的所有資料
+  .lean()// 把Mongoose的Model物件轉換成乾淨的javascript資料陣列
+  .then(todos => res.render('index', { todos }))//將資料傳給index樣板
+  .catch(error => console.error(error))//錯誤處理
 })
 
 //設定port 3000
