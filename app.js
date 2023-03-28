@@ -2,17 +2,6 @@
 const express = require('express')
 //載入mongoose
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema
-const todoSchema = new Schema({
-  name: {
-    type: String, //資料型別是字串
-    required: true //這個是必填欄位
-  },
-  done: {
-    type: Boolean
-  }
-})
-module.exports = mongoose.model('Todo', todoSchema)
 // 加入這段 code, 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
