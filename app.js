@@ -7,6 +7,11 @@ const mongoose = require('mongoose')
 const exphbs = require('express-handlebars')
 //載入Todo model
 const Todo = require('./models/todo')
+//載入body-parser
+const bodyParser = require('body-parser')
+//用app.use 規定每一筆請求都需要透過body-parser進行前置處理
+app.use(bodyParser.urlencoded({ extened: true }))
+
 
 
 
@@ -38,6 +43,19 @@ app.get('/', (req, res) => {
   .lean()// 把Mongoose的Model物件轉換成乾淨的javascript資料陣列
   .then(todos => res.render('index', { todos }))//將資料傳給index樣板
   .catch(error => console.error(error))//錯誤處理
+})
+
+//設定new介面路由
+app.get('/todos/new', (req, res) => {
+  return res.render('new')
+})
+
+//設定create功能路由
+app.post('/todos', (req, res) => {
+  const name = req.body.name //從req.body拿出表單的name資料
+  return Todo.create({ name }) // 存入資料庫
+  .then(() => res.redirect('/')) // 新增完成後倒回首頁
+  .catch(error => console.log(error))
 })
 
 //設定port 3000
