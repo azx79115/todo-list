@@ -76,16 +76,19 @@ app.get('/todos/:id/edit', (req, res) => {
 })
 
 //將修改後的edit傳送至資料庫
+//收集checkbox路由
 app.post('/todos/:id/edit', (req, res) => {
+  console.log(req.body)
   const id = req.params.id
-  const name = req.body.name
+  const { name, isDone } = req.body
   return Todo.findById(id)
-  .then(todo => {
-    todo.name = name
-    return todo.save()
-  })
-  .then(() => res.redirect(`/todos/${id}`))
-  .catch(error => console.log(error))
+    .then(todo => {
+      todo.name = name
+      todo.isDone = isDone === 'on'
+      return todo.save()
+    })
+    .then(() => res.redirect(`/todos/${id}`))
+    .catch(error => console.log(error))
 })
 
 //delete路由設定
