@@ -9,15 +9,17 @@ const exphbs = require('express-handlebars')
 const Todo = require('./models/todo')
 //載入body-parser
 const bodyParser = require('body-parser')
+//載入methodOverride
+const methodOverride = require('method-override')
+
+
 //用app.use 規定每一筆請求都需要透過body-parser進行前置處理
 app.use(bodyParser.urlencoded({ extened: true }))
-
-
-
-
-
+//hnadlebars引擎
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
+//設定每一筆請求都會透過methodOverride進行前置處理
+app.use(methodOverride('_method'))
 // 加入這段 code, 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
@@ -77,7 +79,7 @@ app.get('/todos/:id/edit', (req, res) => {
 })
 
 //將修改後的edit傳送至資料庫,收集checkbox
-app.post('/todos/:id/edit', (req, res) => {
+app.put('/todos/:id', (req, res) => {
   console.log(req.body)
   const id = req.params.id
   const { name, isDone } = req.body
@@ -92,7 +94,7 @@ app.post('/todos/:id/edit', (req, res) => {
 })
 
 //delete路由設定
-app.post('/todos/:id/delete', (req, res) => {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id
   return Todo.findById(id)
   .then(todo => todo.remove())
