@@ -17,8 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
   require('dotenv').config()
 }
 
-//將 request導入路由器
-app.use(routes)
+
 //用app.use 規定每一筆請求都需要透過body-parser進行前置處理
 app.use(bodyParser.urlencoded({ extened: true }))
 //hnadlebars引擎
@@ -26,7 +25,8 @@ app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 //設定每一筆請求都會透過methodOverride進行前置處理
 app.use(methodOverride('_method'))
-
+//將 request導入路由器
+app.use(routes)
 
 
 //設定連線到mongoDB
